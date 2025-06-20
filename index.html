@@ -1,1 +1,147 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rayfield UI Key Generator</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 500px;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+        .key-display {
+            background-color: #333;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 18px;
+            word-break: break-all;
+        }
+        .btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .info {
+            font-size: 14px;
+            color: #aaa;
+            margin-top: 20px;
+        }
+        #apiResponse {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #333;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Rayfield UI Key Generator</h1>
+        <p>Generate a key that will automatically work with the Rayfield script</p>
+        
+        <div class="key-display" id="keyDisplay">Click "Generate Key" to create a key</div>
+        
+        <button class="btn" id="generateBtn">Generate Key</button>
+        <button class="btn" id="copyBtn">Copy Key</button>
+        
+        <div id="apiResponse">API responses will appear here</div>
+        
+        <div class="info">
+            <p>This key will be immediately valid for the Rayfield UI script. Each key is unique and randomly generated.</p>
+        </div>
+    </div>
+
+    <script>
+        // Simulated database of valid keys
+        const validKeys = new Set();
+        
+        // Function to generate a random key
+        function generateKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let key = 'RAY-';
+            for (let i = 0; i < 32; i++) {
+                key += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return key;
+        }
+        
+        // Function to validate a key (simulated API)
+        function validateKey(key) {
+            return validKeys.has(key);
+        }
+        
+        // Function to add a key to the valid keys (simulated API)
+        function registerKey(key) {
+            validKeys.add(key);
+            return true;
+        }
+        
+        document.getElementById('generateBtn').addEventListener('click', function() {
+            const key = generateKey();
+            document.getElementById('keyDisplay').textContent = key;
+            
+            // Simulate API call to register the key
+            registerKey(key);
+            document.getElementById('apiResponse').innerHTML = 
+                `<strong>Key Generated:</strong> ${key}<br>
+                 <strong>Status:</strong> Successfully registered in system`;
+        });
+        
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const key = document.getElementById('keyDisplay').textContent;
+            if (key && key !== 'Click "Generate Key" to create a key') {
+                navigator.clipboard.writeText(key).then(() => {
+                    document.getElementById('apiResponse').innerHTML = 
+                        `<strong>Copied:</strong> ${key} to clipboard`;
+                });
+            }
+        });
+        
+        // Simulate API endpoint for the Rayfield script to check
+        function handleAPICall(key) {
+            if (validateKey(key)) {
+                return { valid: true, message: "Key is valid" };
+            } else {
+                return { valid: false, message: "Invalid key" };
+            }
+        }
+        
+        // Expose the API function globally for demonstration
+        window.validateRayfieldKey = handleAPICall;
+    </script>
+</body>
+</html>
